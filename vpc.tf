@@ -81,7 +81,7 @@ resource "aws_internet_gateway" "project_igw" {
  }
 }
 #Elastic IP for NAT
-resources "aws_eip "nat_eip" {
+resources "aws_eip" "nat_eip" {
   vpc = true
 }
 
@@ -99,6 +99,7 @@ resource "aws_nat_gateway" "project-nat-gw" {
 #Public subnet association
 #Adding Internet gateway to public route table
 #PUBLIC ROUTE TABLE
+
 resource "aws_route_table" "project-public-rt" {
   vpc_id = aws_vpc.project_vpc.id
   tags = {
