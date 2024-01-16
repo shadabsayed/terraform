@@ -1,10 +1,20 @@
-#SG FOR SERVER
-resource "aws_security_group" "project-sg" {
-  name        = "project-sg"
-  description = "Allow port 22 from anywhere"
-  vpc_id = aws_vpc.project_vpc.id 
-  
-  ingress {
+provider "aws" {
+  access_key = 
+  secret_key = 
+  region = "ap-south-1"
+}
+
+resource "aws_security_groups" "public_sg" {
+  name        = "security"
+  vpc_id      = aws_vpc.my_vpc.id
+  description = "allow ssh"
+
+  tags = {
+   Name = "pub_sg"
+  }
+}
+
+ingress {
     description      = "Allow port 22 from anywhere"
     from_port        = 22
     to_port          = 22
@@ -12,60 +22,121 @@ resource "aws_security_group" "project-sg" {
     cidr_blocks      = ["0.0.0.0/0"]
     }
 
-  ingress {
-    description      = "Allow port 80 from anywhere"
-    from_port        = 80
-    to_port          = 80
-    protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
-    }
-
-  ingress {
-    description      = "Allow port 443 from anywhere"
-    from_port        = 443
-    to_port          = 443
-    protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
-    }
 
   egress {
-    description      = "Allow all"
+    description      = "Allow port 22 from anywhere"
     from_port        = 0
     to_port          = 0
     protocol         = "-1"
     cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
   }
 }
 
-#SG FOR ALB
-resource "aws_security_group" "alb-sg" {
-  name        = "alb-sg"
-  description = "Allow port 80 and 443 from anywhere"
-  vpc_id      = aws_vpc.project_vpc.id
+# for private ----
+
+resource "aws_security_groups" "private_sg" {
+  name        = "pvt_sg"
+  vpc_id      = aws_vpc.my_vpc.id
+  description = "port 22 & 80"
+
   tags = {
-    Name = "sg-project-alb"
-} 
+   name = "pvt_sg"
+  }
+
   ingress {
-    description      = "Allow port 80 from anywhere"
+    description      = "ssh access"
+    from_port        = 22
+    to_port          = 22
+    protocol         = "tcp"
+    cidr_blocks      = ["0.0.0.0/0"]
+   }
+   /*
+
+  ingress {
+    description      = "http access"
     from_port        = 80
     to_port          = 80
     protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
-    }
-  
-  ingress {
-    description      = "Allow port 443 from anywhere"
-    from_port        = 443
-    to_port          = 443
-    protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
-    }
-  
+    security_groups  = aws_security_groups.load_sg.id
+   }
+   /*
+   
   egress {
-    description      = "Allow all"
+    description      = "all access"
     from_port        = 0
     to_port          = 0
     protocol         = "-1"
     cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
+}
+
+
+# for load balancer---
+
+resource "aws_security_groups" "load_sg" {
+  name        = "load_sg"
+  vpc_id      = aws_vpc.my_vpc.id
+  description = "port 80 & 443"
+
+  tags = {
+   name = "ALB_sg"
+  }
+
+  ingress {
+    description      = "http access"
+    from_port        = 80
+    to_port          = 80
+    protocol         = "tcp"
+    cidr_blocks      = ["0.0.0.0/0"]
+   }
+   /*
+
+   ingress {
+    description      = "http access"
+    from_port        = 80
+    to_port          = 80
+    protocol         = "tcp"
+    security_groups  = aws_security_groups.private_sg.id
+   }
+   /*
+   
+  egress {
+    description      = "all access"
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
+}
+
+# for RDS ----
+
+resource "aws_security_groups" "rds_sg" {
+  name        = "rds_sg"
+  vpc_id      = aws_vpc.my_vpc.id
+  description = "port 3306"
+
+  tags = {
+   name = "rds_group"
+  }
+
+   ingress {
+    description      = "mysql access"
+    from_port        = 3306
+    to_port          = 3306
+    protocol         = "tcp"
+    security_groups  = aws_security_groups.private_sg.id
+   }
+   
+  egress {
+    description      = "all access"
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
   }
 }
