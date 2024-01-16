@@ -52,7 +52,7 @@ resource "aws_security_group" "alb-sg" {
     protocol         = "tcp"
     cidr_blocks      = ["0.0.0.0/0"]
     }
-  /*
+  
   ingress {
     description      = "Allow port 443 from anywhere"
     from_port        = 443
@@ -60,7 +60,7 @@ resource "aws_security_group" "alb-sg" {
     protocol         = "tcp"
     cidr_blocks      = ["0.0.0.0/0"]
     }
-  */
+  
   egress {
     description      = "Allow all"
     from_port        = 0
