@@ -107,12 +107,12 @@ resource "aws_route_table" "project-public-rt" {
 }
 
 #ASSOCIATION OF PUBLIC SUBNET WITH PUBLIC ROUTE TABLE
-resource = "aws_route_table_association" "public_subnet_association-1" {
+resource "aws_route_table_association" "public_subnet_association-1" {
   route_table_id = aws_route_table.project-public-rt.id
   subnet_id      = aws_subnet.project-public-subnet-1.id
 }
 
-resource = "aws_route_table_association" "public_subnet_association-2" {
+resource "aws_route_table_association" "public_subnet_association-2" {
   route_table_id = aws_route_table.project-public-rt.id
   subnet_id      = aws_subnet.project-public-subnet-2.id
 }
@@ -136,12 +136,12 @@ resource "aws_route_table" "project-private-rt" {
 }
 
 #ASSOCIATION OF PRIVATE SUBNET WITH PRIVATE ROUTE TABLE
-resource = "aws_route_table_association" "private_subnet_association-1" {
+resource "aws_route_table_association" "private_subnet_association-1" {
   route_table_id = aws_route_table.project-private-rt.id
   subnet_id      = aws_subnet.project-private-subnet-1.id
 }
 
-resource = "aws_route_table_association" "private_subnet_association-2" {
+resource "aws_route_table_association" "private_subnet_association-2" {
   route_table_id = aws_route_table.project-private-rt.id
   subnet_id      = aws_subnet.project-private-subnet-2.id
 }
@@ -164,12 +164,12 @@ resource "aws_route_table" "project-database-rt" {
 }
 
 #ASSOCIATION OF DATABASE SUBNET WITH DATABASE ROUTE TABLE
-resource = "aws_route_table_association" "database_subnet_association-1" {
+resource "aws_route_table_association" "database_subnet_association-1" {
   route_table_id = aws_route_table.project-database-rt.id
   subnet_id      = aws_subnet.project-database-subnet-1.id
 }
 
-resource = "aws_route_table_association" "database_subnet_association-2" {
+resource "aws_route_table_association" "database_subnet_association-2" {
   route_table_id = aws_route_table.project-database-rt.id
   subnet_id      = aws_subnet.project-database-subnet-2.id
 }
