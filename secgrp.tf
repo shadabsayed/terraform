@@ -43,7 +43,7 @@ resource "aws_security_group" "alb-sg" {
   description = "Allow port 80 and 443 from anywhere"
   vpc_id      = aws_vpc.project_vpc.id
   tags = {
-    "Name = "sg-project-alb"
+    Name = "sg-project-alb"
 } 
   ingress {
     description      = "Allow port 80 from anywhere"
