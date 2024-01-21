@@ -83,7 +83,7 @@ resource "aws_internet_gateway" "my_igw" {
 }
 
 resource "aws_eip" "nat_ip" {
-  domain = "vpc"
+  vpc = "true"
 
   tags = {
     Name = "my_elasticIP"
