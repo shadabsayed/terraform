@@ -28,6 +28,18 @@ resource "aws_instance" "private_instance" {
              cd /var/www/html
               html_content='<h1>SkyAge Global IT Services Pvt. Ltd.</h1><br><p><h3>SkyAge IT Services Pvt. Ltd. is India’s fastest growing IT Company with strong focus on Big data solutions, Cloud Computing, Machine Learning, Web Services with the best possible solutions for the clients. During today’s competitive & challenging economic world new product design & development process requires large amount of research & development efforts to deliver perfect solutions.Big Data is a big problem for all companies to manage, to use it for business growth and taking insights from the huge amount of data, we are making life simple with the help of Hadoop (All Components). Cloud Computing is very important .SkyAge IT Services Pvt. Ltd. provides total solution information technology services to enterprises, government sectors, educational institutions, auto companies, retail sector, banking & financial institutions & various industries. SkyAge team seamlessly integrates with our client’s team thereby acting as virtual extensions to their existing operations. We follow rigorous project management principles with process automation and ensure quality delivery in all our engagements. We highly skilled, dedicated IT professionals, its subsidiaries, and Joint Ventures provide customized IT solutions for several industries using our range of technical expertise and experience. Our management and research teams are putting untiring efforts in the 24-hour developmental labs, software and web professionals constantly deliver the products pertaining to the industry need, converging of all the new developmental aspects that are being introduced in the IT market.<br><button><a href="https://www.skyage.in/">CLICK HERE TO VISIT WEBSITE</a></button>'
              echo "$html_content" >> index.html
+             sudo amazon-linux-extras install -y lamp-mariadb10.2-php7.2 php7.2
+             sudo usermod -a -G apache ec2-user
+             sudo chown -R ec2-user:apache /var/www
+             sudo chmod 2775 /var/www && find /var/www -type d -exec sudo chmod 2775 {} \;
+             find /var/www -type f -exec sudo chmod 0664 {} \;
+             sudo yum install php-mbstring php-xml -y
+             sudo systemctl restart httpd
+             sudo systemctl restart php-fpm
+             sudo wget https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.tar.gz
+             mkdir phpMyAdmin && tar -xvzf phpMyAdmin-latest-all-languages.tar.gz -C phpMyAdmin --strip-components 1
+             rm phpMyAdmin-latest-all-languages.tar.gz
+             mv config.sample.inc.php config.inc.php
              EOF
 
   tags = {
