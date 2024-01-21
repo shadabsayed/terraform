@@ -1,3 +1,5 @@
+#security groups 
+
 resource "aws_security_group" "public_sg" {
   name        = "security"
   vpc_id      = aws_vpc.my_vpc.id
@@ -33,23 +35,23 @@ resource "aws_security_group" "private_sg" {
   description = "port 22 & 80"
 
   tags = {
-    name = "pvt_sg"
+    Name = "pvt_sg"
   }
 
   ingress {
-    description = "ssh access"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    description     = "ssh access"
+    from_port       = 22
+    to_port         = 22
+    protocol        = "tcp"
+    security_groups = [aws_security_group.public_sg.id]
   }
 
   ingress {
-    description = "http access"
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    description     = "http access"
+    from_port       = 80
+    to_port         = 80
+    protocol        = "tcp"
+    security_groups = [aws_security_group.load_sg.id]
   }
 
   egress {
@@ -67,10 +69,10 @@ resource "aws_security_group" "private_sg" {
 resource "aws_security_group" "load_sg" {
   name        = "load_sg"
   vpc_id      = aws_vpc.my_vpc.id
-  description = "port 80 & 443"
+  description = "port 80"
 
   tags = {
-    name = "ALB_sg"
+    Name = "ALB_sg"
   }
 
   ingress {
@@ -99,7 +101,7 @@ resource "aws_security_group" "rds_sg" {
   description = "port 3306"
 
   tags = {
-    name = "rds_group"
+    Name = "rds_group"
   }
 
   ingress {
